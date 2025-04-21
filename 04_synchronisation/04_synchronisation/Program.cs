@@ -279,84 +279,84 @@
 
 #region Signaling
 
-Pingator pingator = new Pingator();
-ThreadManager tm1 = new ThreadManager("ping", pingator);
-ThreadManager tm2 = new ThreadManager("pong", pingator);
+//Pingator pingator = new Pingator();
+//ThreadManager tm1 = new ThreadManager("ping", pingator);
+//ThreadManager tm2 = new ThreadManager("pong", pingator);
 
-class Pingator
-{
-    private object locker = new object();
+//class Pingator
+//{
+//    private object locker = new object();
 
-    public void Ping(bool run = true)
-    {
-        lock (locker)
-        {
-            if (!run)
-            {
-                Monitor.Pulse(locker);
-                return;
-            }
-            Console.WriteLine("PING");
-            Thread.Sleep(300);
+//    public void Ping(bool run = true)
+//    {
+//        lock (locker)
+//        {
+//            if (!run)
+//            {
+//                Monitor.Pulse(locker);
+//                return;
+//            }
+//            Console.WriteLine("PING");
+//            Thread.Sleep(300);
 
-            Monitor.Pulse(locker);
-            Monitor.Wait(locker);
-        }
-    }
+//            Monitor.Pulse(locker);
+//            Monitor.Wait(locker);
+//        }
+//    }
 
-    public void Pong(bool run = true)
-    {
-        lock (locker)
-        {
-            if (!run)
-            {
-                Monitor.Pulse(locker);
-                return;
-            }
-            Console.WriteLine("PONG");
-            Thread.Sleep(300);
+//    public void Pong(bool run = true)
+//    {
+//        lock (locker)
+//        {
+//            if (!run)
+//            {
+//                Monitor.Pulse(locker);
+//                return;
+//            }
+//            Console.WriteLine("PONG");
+//            Thread.Sleep(300);
 
-            Monitor.Pulse(locker);
-            Monitor.Wait(locker);
-        }
-    }
-}
+//            Monitor.Pulse(locker);
+//            Monitor.Wait(locker);
+//        }
+//    }
+//}
 
-class ThreadManager
-{
-    private Thread thread;
-    private Pingator pingator;
+//class ThreadManager
+//{
+//    private Thread thread;
+//    private Pingator pingator;
 
-    public ThreadManager(string name, Pingator pingator)
-    {
-        thread = new Thread(Run)
-        {
-            Name = name,
-        };
+//    public ThreadManager(string name, Pingator pingator)
+//    {
+//        thread = new Thread(Run)
+//        {
+//            Name = name,
+//        };
 
-        this.pingator = pingator;
+//        this.pingator = pingator;
 
-        thread.Start();
-    }
+//        thread.Start();
+//    }
 
-    public void Run()
-    {
-        if (thread.Name == "ping")
-        {
-            for (int i = 0; i < 10; ++i)
-                pingator.Ping(true);
+//    public void Run()
+//    {
+//        if (thread.Name == "ping")
+//        {
+//            for (int i = 0; i < 10; ++i)
+//                pingator.Ping(true);
 
-            pingator.Ping(false);
-        }
-        else
-        {
-            for (int i = 0; i < 10; ++i)
-                pingator.Pong(true);
+//            pingator.Ping(false);
+//        }
+//        else
+//        {
+//            for (int i = 0; i < 10; ++i)
+//                pingator.Pong(true);
 
-            pingator.Pong(false);
-        }
-    }
-}
+//            pingator.Pong(false);
+//        }
+//    }
+//}
 
 
 
@@ -424,8 +424,8 @@ class ThreadManager
 
 
 
-// AutoResetEvent arev = new AutoResetEvent(false);
-// EventWaitHandle arev2 = new EventWaitHandle(false, EventResetMode.AutoReset);
+//AutoResetEvent arev = new AutoResetEvent(false);
+//EventWaitHandle arev2 = new EventWaitHandle(false, EventResetMode.AutoReset);
 
 //SimpleWaitHandler.Run();
 //static class SimpleWaitHandler
@@ -442,7 +442,7 @@ class ThreadManager
 //    static void Work()
 //    {
 //        Console.WriteLine("Work() waiting");
-//        wh.WaitOne();
+//        wh.WaitOne();                   // Ждем сигнального состояния
 //        Console.WriteLine("Working....");
 //    }
 //}
@@ -460,7 +460,6 @@ class ThreadManager
 
 //    static string? message;
 //    static object locker = new object();
-
 
 
 //    public static void Run()
@@ -486,12 +485,12 @@ class ThreadManager
 
 //    private static void Worker()
 //    {
-//        while(true)
+//        while (true)
 //        {
 //            workerWh.Set();
 //            mainWh.WaitOne();
 
-//            lock(locker)
+//            lock (locker)
 //            {
 //                if (message is null)
 //                    return;
@@ -504,6 +503,90 @@ class ThreadManager
 //}
 
 
+
+
+
+
+
+//AutoResetEvent are = new AutoResetEvent(false);
+
+//for (int i = 0; i < 5; ++i)
+//{
+//    Thread t = new Thread(Render)
+//    {
+//        Name = $"thread_{i}"
+//    };
+
+//    t.Start();
+//}
+
+//Thread.Sleep(3000);
+//are.Set();
+
+//void Render()
+//{
+//    are.WaitOne();
+//    for (int i = 0; i < 10; ++i)
+//    {
+//        Console.WriteLine($"{Thread.CurrentThread.Name}: {i}");
+//        Thread.Sleep(100);
+//    }
+//    are.Set();
+//}
+
+
+
+
+
+//ManualResetEvent mre = new ManualResetEvent(false);
+
+//UserThread ut1 = new UserThread("first", mre);
+
+//Console.WriteLine("Waiting...");
+//mre.WaitOne();
+//Console.WriteLine("Working...");
+//mre.Reset();
+
+
+//UserThread ut2 = new UserThread("second", mre);
+
+//Console.WriteLine("Waiting...");
+//mre.WaitOne();
+//Console.WriteLine("Working...");
+//mre.Reset();
+
+
+
+
+//class UserThread
+//{
+//    private ManualResetEvent mre;
+//    public Thread Thread { get; set; }
+
+//    public UserThread(string name, ManualResetEvent mre)
+//    {
+//        this.mre = mre;
+
+//        Thread = new Thread(Run)
+//        {
+//            Name = name,
+//        };
+
+//        Thread.Start();
+//    }
+
+//    private void Run()
+//    {
+//        Console.WriteLine($"Thread {Thread.CurrentThread.Name} started...");
+
+//        for (int i = 0; i < 5; ++i)
+//        {
+//            Console.WriteLine($"{Thread.CurrentThread.Name}: {i}");
+//            Thread.Sleep(200);
+//        }
+
+//        mre.Set();
+//    }
+//}
+
 #endregion
-
-
